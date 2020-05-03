@@ -1,5 +1,6 @@
 # Files to ignore
 auth.json
+*.db
 
 # Subfolders to ignore
 [Nn]ode_modules/

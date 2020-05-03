@@ -1,19 +1,34 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const auth = require('./auth.json');
-const {prefix} = require('./config.json');
+const {prefix, pathToDatabase, channelDb} = require('./config.json');
+const cron = require('node-cron');
+const update = require('./update.js');
+const {Database} = require('./database.js');
 
 const bot = new Discord.Client();
 bot.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
+    const command = require(`./commands/${file}`);
 
-	// set a new item in the Collection
-	// with the key as the command name and the value as the exported module
-	bot.commands.set(command.name, command);
+    // set a new item in the Collection
+    // with the key as the command name and the value as the exported module
+    bot.commands.set(command.name, command);
 }
+
+bot.database = new Database(pathToDatabase, channelDb);
+
+cron.schedule('0 0 * * *', () =>
+{
+    bot.database.fetchChannels(bot.channels)
+    .then(channels =>
+        {
+            update.execute(channels)
+        })
+    .catch(err => console.log(err));
+});
 
 bot.on('ready', () => {
 });
@@ -22,7 +37,7 @@ bot.on('message', message => {
     if(message.content.startsWith(prefix) && !message.author.bot)
     {
         const args = message.content.slice(prefix.length).split(/ +/);
-	    const command = args.shift().toLowerCase();
+        const command = args.shift().toLowerCase();
 
         if (!bot.commands.has(command))
         {
@@ -38,7 +53,6 @@ bot.on('message', message => {
             message.reply('There was an error trying to execute that command!');
         }
     }
-    
 });
 
 bot.login(auth.token)
