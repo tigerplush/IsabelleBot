@@ -1,0 +1,25 @@
+{
+  "name": "isabellebot",
+  "version": "1.0.0",
+  "description": "This is a bot connecting to a homebrew version of the villagerdb api and posting villagers birthdays",
+  "main": "isabelle.js",
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "nedb": "^1.8.0",
+    "node-cron": "^2.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tigerplush/IsabelleBot.git"
+  },
+  "author": "Christopher 'Tiger' Putz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tigerplush/IsabelleBot/issues"
+  },
+  "homepage": "https://github.com/tigerplush/IsabelleBot#readme"
+}
