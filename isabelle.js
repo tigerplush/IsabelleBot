@@ -25,7 +25,7 @@ cron.schedule('0 0 * * *', () =>
     bot.database.fetchChannels(bot.channels)
     .then(channels =>
         {
-            update.execute(channels)
+            update.execute(channels);
         })
     .catch(err => console.log(err));
 });
