@@ -26,8 +26,8 @@ module.exports =
                 {
                     if(json.villager && json.villager.length > 0)
                     {
-                        let announcement;
                         if(json.villager.length == 1)
+                        let announcement = "";
                         {
                             announcement = "Today ";
                             announcement += json.villager[0].name;
