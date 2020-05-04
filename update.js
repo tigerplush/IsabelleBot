@@ -24,21 +24,26 @@ module.exports =
         .then(json => {
             channels.map(channel =>
                 {
-                    if(json.villager && json.villager.length > 0)
+                    let villagers = json.villager;
+                    if(villagers && villagers.length > 0)
                     {
-                        if(json.villager.length == 1)
                         let announcement = "";
+                        if(villagers.length == 1)
                         {
-                            announcement = "Today ";
-                            announcement += json.villager[0].name;
+                            announcement += "Today ";
+                            announcement += villagers[0].name;
                             announcement += " is celebrating ";
-                            announcement += genderify(json.villager);
+                            announcement += genderify(villagers[0]);
                             announcement += " birthday!";
+                        }
+                        else if(villagers.length == 2)
+                        {
+                            announcement += villagers.map(villager => villager.name).join(" and ") + " are celebrating their birthdays today!";
                         }
                         else
                         {
-                            lastVillager = json.villager.pop();
-                            announcement += json.villager.map(villager => villager.name).join(", ") + ". and " + lastVillager.name + " are celebrating their birthdays!";
+                            lastVillager = villagers.pop();
+                            announcement += villagers.map(villager => villager.name).join(", ") + ", and " + lastVillager.name + " are celebrating their birthdays today!";
                         }
                         channel.send(announcement);
                     }
