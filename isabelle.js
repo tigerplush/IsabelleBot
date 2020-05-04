@@ -30,7 +30,14 @@ cron.schedule('0 0 * * *', () =>
     .catch(err => console.log(err));
 });
 
-bot.on('ready', () => {
+bot.on('ready', () =>
+{
+    bot.database.fetchChannels(bot.channels)
+    .then(channels =>
+        {
+            update.execute(channels);
+        })
+    .catch(err => console.log(err));
 });
 
 bot.on('message', message => {
