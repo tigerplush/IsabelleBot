@@ -7,7 +7,6 @@ module.exports =
         const date = new Date(Date.now());
         const dateString = ((date.getMonth() + 1) + "-" + (date.getDay() + 1)).toString();
 
-        
         const info = {birthday: dateString};
 
         const options = {

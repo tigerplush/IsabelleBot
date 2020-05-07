@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const auth = require('./auth.json');
 const {prefix, welcomeRoles} = require('./config.json');
 const cron = require('node-cron');
-const update = require('./update.js');
+const check = require('./check.js');
 
 const {channelDatabase, welcomeMessageDatabase} = require('./Database/databases.js');
 
@@ -25,7 +25,7 @@ cron.schedule('0 0 * * *', () =>
     channelDatabase.fetchAnnouncementChannels(bot.channels)
     .then(channels =>
         {
-            update.execute(channels);
+            check.execute(channels);
         })
     .catch(err => console.log(err));
 });
@@ -35,7 +35,7 @@ bot.on('ready', () =>
     channelDatabase.fetchAnnouncementChannels(bot.channels)
     .then(channels =>
         {
-            update.execute(channels);
+            check.execute(channels);
         })
     .catch(err => console.log(err));
 });
