@@ -8,7 +8,7 @@ module.exports =
     execute(channels)
     {
         const date = new Date(Date.now());
-        const dateString = ((date.getMonth() + 1) + "-" + (date.getDay() + 1)).toString();
+        const dateString = ((date.getMonth() + 1) + "-" + (date.getDate())).toString();
 
         const info = {birthday: dateString};
 
