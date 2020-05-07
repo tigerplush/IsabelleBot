@@ -1,11 +1,11 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const auth = require('./auth.json');
-const {prefix} = require('./config.json');
+const {prefix, welcomeRoles} = require('./config.json');
 const cron = require('node-cron');
 const update = require('./update.js');
 
-const {channelDatabase} = require('./Database/databases.js');
+const {channelDatabase, welcomeMessageDatabase} = require('./Database/databases.js');
 
 const bot = new Discord.Client();
 bot.commands = new Discord.Collection();
@@ -38,6 +38,39 @@ bot.on('ready', () =>
             update.execute(channels);
         })
     .catch(err => console.log(err));
+});
+
+bot.on('guildMemberUpdate', (oldMember, newMember)=>
+{
+    //for every role
+    welcomeRoles.map(welcomeRole =>
+        {
+            //check if updates user already had that role
+            const oldRole = oldMember.roles.cache.find(role => role.name === welcomeRole);
+            if(!oldRole)
+            {
+                //if not, check if he has it now
+                const newRole = newMember.roles.cache.find(role => role.name === welcomeRole);
+                if(newRole)
+                {
+                    const serverid = newMember.guild.id;
+                    const userid = newMember.id;
+                    console.log(`${welcomeRole}ified new member ${userid}`);
+
+                    // look for welcoming channel
+                    channelDatabase.fetchChannel(bot.channels, {serverid: serverid, type: "welcome"})
+                    .then(channel =>
+                        {
+                            welcomeMessageDatabase.findMessage(serverid)
+                            .then(messageContent => channel.send(messageContent))
+                            .catch(err => console.log(err));
+                            //write the welcome message
+                        })
+                    .catch(err => console.log(err));
+                }
+            }
+        })
+    
 });
 
 bot.on('message', message => {

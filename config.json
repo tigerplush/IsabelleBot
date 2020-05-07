@@ -1,6 +1,10 @@
 {
     "prefix": "!isabelle ",
     "pathToDatabase": "databases",
+    "welcomeRoles":
+    [
+        "Thug"
+    ],
     "channelDb": "channels.db",
     "apiUrl": "http://62.75.251.202:3001/villager"
 }

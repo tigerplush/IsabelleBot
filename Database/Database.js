@@ -29,6 +29,25 @@ class Database
         });
     }
 
+    update(doc, updateProperties)
+    {
+        return new Promise((resolve, reject) =>
+        {
+            this.database.update(
+                doc,
+                {$set: updateProperties},
+                {},
+                function(err)
+                {
+                    if(err)
+                    {
+                        reject(err);
+                    }
+                    resolve();
+                });
+        });
+    }
+
     remove(doc)
     {
         return new Promise((resolve, reject) =>
