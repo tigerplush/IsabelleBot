@@ -6,5 +6,6 @@
         "Thug"
     ],
     "channelDb": "channels.db",
+    "welcomeMessageDb": "welcomeMessage.db",
     "apiUrl": "http://62.75.251.202:3001/villager"
 }

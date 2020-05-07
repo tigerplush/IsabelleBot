@@ -1,4 +1,4 @@
-const {pathToDatabase, channelDb} = require('../config.json');
+const {pathToDatabase, channelDb, welcomeMessageDb} = require('../config.json');
 
 const ChannelDatabase = require('./ChannelDatabase.js');
 const WelcomeMessageDatabase = require('./WelcomeMessageDatabase.js');
