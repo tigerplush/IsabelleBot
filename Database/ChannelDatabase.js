@@ -74,7 +74,7 @@ class ChannelDatabase extends Database
                     {
                         resolve(docs[0]);
                     }
-                    reject("404 - channel not found");
+                    reject(`404 - channel ${JSON.stringify(channel)} not found`);
                 })
             .catch(err => reject(err));
         });
