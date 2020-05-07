@@ -1,10 +1,11 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const auth = require('./auth.json');
-const {prefix, pathToDatabase, channelDb} = require('./config.json');
+const {prefix} = require('./config.json');
 const cron = require('node-cron');
 const update = require('./update.js');
-const {Database} = require('./database.js');
+
+const {channelDatabase} = require('./Database/databases.js');
 
 const bot = new Discord.Client();
 bot.commands = new Discord.Collection();
@@ -18,11 +19,10 @@ for (const file of commandFiles) {
     bot.commands.set(command.name, command);
 }
 
-bot.database = new Database(pathToDatabase, channelDb);
 
 cron.schedule('0 0 * * *', () =>
 {
-    bot.database.fetchChannels(bot.channels)
+    channelDatabase.fetchAnnouncementChannels(bot.channels)
     .then(channels =>
         {
             update.execute(channels);
@@ -32,7 +32,7 @@ cron.schedule('0 0 * * *', () =>
 
 bot.on('ready', () =>
 {
-    bot.database.fetchChannels(bot.channels)
+    channelDatabase.fetchAnnouncementChannels(bot.channels)
     .then(channels =>
         {
             update.execute(channels);

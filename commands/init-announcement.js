@@ -1,8 +1,8 @@
-const Discord = require('discord.js');
+const {channelDatabase} = require('../Database/databases.js');
 
 module.exports =
 {
-    name: "init",
+    name: "init-announcement",
     hidden: true,
     usage: "",
     description: "Initialises this channel as announcement channel",
@@ -14,7 +14,9 @@ module.exports =
     {
         if(message.member.hasPermission("ADMINISTRATOR" || "MANAGE_CHANNELS" || "MANAGE_GUILD"))
         {
-            message.client.database.addChannel(message.channel.id)
+            const serverid = message.guild.id;
+            const channelid = message.channel.id;
+            channelDatabase.addChannel(serverid, channelid, "announcement")
             .then(message.reply("I've initialised this channel as announcement channel!"))
             .catch(err =>
                 {
