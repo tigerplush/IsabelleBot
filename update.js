@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const {apiUrl, port, path} = require('./config.json');
+const {apiUrl} = require('./config.json');
 module.exports =
 {
     execute(channels)
