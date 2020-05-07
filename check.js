@@ -26,10 +26,10 @@ module.exports =
                     let villagers = json.villager;
                     if(villagers && villagers.length > 0)
                     {
-                        let announcement = "There are no news for today";
+                        let announcement = "";
                         if(villagers.length == 1)
                         {
-                            announcement = "Today ";
+                            announcement += "Today ";
                             announcement += villagers[0].name;
                             announcement += " is celebrating ";
                             announcement += genderify(villagers[0]);
@@ -37,12 +37,12 @@ module.exports =
                         }
                         else if(villagers.length == 2)
                         {
-                            announcement = villagers.map(villager => villager.name).join(" and ") + " are celebrating their birthdays today!";
+                            announcement += villagers.map(villager => villager.name).join(" and ") + " are celebrating their birthdays today!";
                         }
-                        else if(villagers.length > 2)
+                        else
                         {
                             lastVillager = villagers.pop();
-                            announcement = villagers.map(villager => villager.name).join(", ") + ", and " + lastVillager.name + " are celebrating their birthdays today!";
+                            announcement += villagers.map(villager => villager.name).join(", ") + ", and " + lastVillager.name + " are celebrating their birthdays today!";
                         }
                         channel.send(announcement);
                     }
