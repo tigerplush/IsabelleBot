@@ -66,7 +66,7 @@ module.exports =
                                 else
                                 {
                                     const lastUser = users.pop();
-                                    announcement += "members <@" + users.map(user => user.userid).join(">, <@") + `, and <@${lastUser.userid}>`;
+                                    announcement += "members <@" + users.map(user => user.userid).join(">, <@") + `>, and <@${lastUser.userid}>`;
                                 }
                                 announcement += "! :tada:"
                             }
