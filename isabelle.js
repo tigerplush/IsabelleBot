@@ -1,9 +1,10 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const auth = require('./auth.json');
-const {prefix, welcomeRoles} = require('./config.json');
+const {prefix, welcomeRoles, welcomingTimeout} = require('./config.json');
 const cron = require('node-cron');
 const check = require('./check.js');
+const moment = require('moment');
 
 const {channelDatabase, welcomeMessageDatabase} = require('./Database/databases.js');
 
@@ -61,10 +62,34 @@ bot.on('guildMemberUpdate', (oldMember, newMember)=>
                     channelDatabase.fetchChannel(bot.channels, {serverid: serverid, type: "welcome"})
                     .then(channel =>
                         {
-                            welcomeMessageDatabase.findMessage(serverid)
-                            .then(messageContent => channel.send(messageContent))
-                            .catch(err => console.log(err));
-                            //write the welcome message
+                            channelDatabase.findChannel(serverid, "welcome")
+                            .then(channelInfo =>
+                                {
+                                    const timeoutDuration = moment.duration(welcomingTimeout);
+                                    const timeout = moment().subtract(timeoutDuration);
+
+                                    return timeout.diff(channelInfo.lastMessageTimestamp) < 0;
+                                })
+                            .catch(err =>
+                                {
+                                    console.log(err);
+                                    return;
+                                })
+                            .then(timeout =>
+                                {
+                                    if(!timeout)
+                                    {
+                                        //find the welcome message in the database and send it to the welcoming channel
+                                        welcomeMessageDatabase.findMessage(serverid)
+                                        .then(messageContent => channel.send(messageContent))
+                                        .catch(err => console.log(err));
+                                        channelDatabase.updateTimestamp(serverid);
+                                    }
+                                    else
+                                    {
+                                        console.log("welcoming is still on cooldown");
+                                    }
+                                });
                         })
                     .catch(err => console.log(err));
                 }

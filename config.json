@@ -8,5 +8,6 @@
     "channelDb": "channels.db",
     "welcomeMessageDb": "welcomeMessage.db",
     "userDb": "user.db",
-    "apiUrl": "http://62.75.251.202:3001/villager"
+    "apiUrl": "http://62.75.251.202:3001/villager",
+    "welcomingTimeout": "00:15:00"
 }

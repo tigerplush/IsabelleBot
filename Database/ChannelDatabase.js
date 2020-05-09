@@ -80,6 +80,31 @@ class ChannelDatabase extends Database
         });
     }
 
+    findChannel(serverid, type)
+    {
+        return new Promise((resolve, reject) =>
+        {
+            super.find({serverid: serverid, type: type})
+            .then(docs =>
+                {
+                    if(docs && docs.length > 0)
+                    {
+                        resolve(docs[0]);
+                    }
+                    reject(`404 - channel of type ${type} on server ${serverid} not found`);
+                })
+            .catch(err => reject(err));
+        });
+    }
+
+    updateTimestamp(serverid)
+    {
+        super.update(
+            {serverid: serverid},
+            {lastMessageTimestamp: Date.now()})
+            .catch(err => console.log(err));
+    }
+
     fetchAnnouncementChannels(channelManager)
     {
         return this.fetchChannels(channelManager, {type: "announcement"});
