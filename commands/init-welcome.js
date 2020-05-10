@@ -17,7 +17,12 @@ module.exports =
             const serverid = message.guild.id;
             const channelid = message.channel.id;
             channelDatabase.addChannel(serverid, channelid, "welcome")
-            .then(message.reply("I've initialised this channel as welcome channel!"))
+            .then(() =>
+            {
+                channelDatabase.update({serverid: serverid, channelid: channelid}, {lastMessageTimestamp: 0})
+                .catch(err => console.log(err));
+                message.reply("I've initialised this channel as welcome channel!");
+            })
             .catch(err =>
                 {
                     if(err)
