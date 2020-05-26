@@ -24,6 +24,7 @@ module.exports =
         let pollContent = "";
         let options = 0;
         let pollAttachments = {};
+        let messageId = "";
 
         message.reply(`I'm going to send you a dm to ask for more informations!`)
         .then(() =>
@@ -112,14 +113,15 @@ module.exports =
                 messageContent += `\nPoll ends ${endingTime.fromNow()}`;
                 return message.channel.send(messageContent, pollAttachments);
             })
-        .then(message =>
+        .then(pollMessage =>
             {
+                messageId = pollMessage.id;
                 let p = Promise.resolve();
                 for(let i = 0; i < options; i++)
                 {
                     p = p.then(() =>
                     {
-                        return message.react(emojis[i]);
+                        return pollMessage.react(emojis[i]);
                     });
                 }
 
@@ -132,7 +134,6 @@ module.exports =
                         return {name: emoji.name, id: emoji.id};
                     })
 
-                const messageId = message.id;
                 return pollDatabase.add(
                     {
                         guildId: guildId
