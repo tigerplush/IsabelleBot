@@ -81,6 +81,10 @@ module.exports =
                         const guildName = channel.guild.name;
                         const time = moment().format("h:mm A [(GMT)] [on] dddd, MMMM Do, YYYY");
                         let messageContent = `Good day, everyone!`;
+                        if(moment().day() === 0)
+                        {
+                            messageContent = `Happy turnip day, y'all!`
+                        }
                         messageContent += `\nRight now on **${guildName}** it's ${time}.`;
                         messageContent += `\n${announcement}`;
                         messageContent += `\nThat's all for today... Have a fun day out there!`;
