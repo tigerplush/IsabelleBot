@@ -32,7 +32,7 @@ PollManager.prototype.update = function(poll)
     .then(message =>
         {
             let messageContent = message.content;
-            let endingTime = moment(poll.endingTime);
+            let endingTime = moment(poll.endingTimestamp);
             messageContent = messageContent.replace(/\n.*$/, `\nPoll ends ${endingTime.fromNow()}`);
             return message.edit(messageContent);
         })
