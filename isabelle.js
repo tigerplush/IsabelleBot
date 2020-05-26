@@ -6,6 +6,8 @@ const cron = require('node-cron');
 const check = require('./check.js');
 const moment = require('moment');
 
+const PollManager = require('./PollManager');
+
 const {channelDatabase, welcomeMessageDatabase} = require('./Database/databases.js');
 
 const bot = new Discord.Client();
@@ -20,6 +22,15 @@ for (const file of commandFiles) {
     bot.commands.set(command.name, command);
 }
 
+const pollManager = new PollManager(bot.channels);
+
+//run every minute
+cron.schedule('*/1 * * * *', () =>
+{
+    pollManager.check();
+});
+
+//run every day at 10:45 GMT
 cron.schedule('45 10 * * *', () =>
 {
     let minimumDuration = moment.duration(minimumTime).asSeconds();
