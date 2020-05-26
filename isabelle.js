@@ -21,7 +21,7 @@ for (const file of commandFiles) {
 }
 
 
-cron.schedule('0 0 * * *', () =>
+cron.schedule('0 12 * * *', () =>
 {
     channelDatabase.fetchAnnouncementChannels(bot.channels)
     .then(channels =>
