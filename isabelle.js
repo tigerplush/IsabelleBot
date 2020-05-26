@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const auth = require('./auth.json');
-const {prefix, welcomeRoles, welcomingTimeout} = require('./config.json');
+const {prefix, welcomeRoles, welcomingTimeout, minimumTime, maximumTime} = require('./config.json');
 const cron = require('node-cron');
 const check = require('./check.js');
 const moment = require('moment');
@@ -20,15 +20,20 @@ for (const file of commandFiles) {
     bot.commands.set(command.name, command);
 }
 
-
-cron.schedule('0 12 * * *', () =>
+cron.schedule('*45 10 * * *', () =>
 {
-    channelDatabase.fetchAnnouncementChannels(bot.channels)
-    .then(channels =>
-        {
-            check.execute(channels);
-        })
-    .catch(err => console.log(err));
+    let minimumDuration = moment.duration(minimumTime).asSeconds();
+    let maximumDuration = moment.duration(maximumTime).asSeconds();
+    let randomDuration = minimumDuration + (Math.random() * (maximumDuration - minimumDuration));
+    setTimeout(() =>
+    {
+        channelDatabase.fetchAnnouncementChannels(bot.channels)
+        .then(channels =>
+            {
+                check.execute(channels);
+            })
+        .catch(err => console.log(err));
+    }, randomDuration * 1000);
 });
 
 bot.on('ready', () =>
