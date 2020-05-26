@@ -20,7 +20,7 @@ for (const file of commandFiles) {
     bot.commands.set(command.name, command);
 }
 
-cron.schedule('*45 10 * * *', () =>
+cron.schedule('45 10 * * *', () =>
 {
     let minimumDuration = moment.duration(minimumTime).asSeconds();
     let maximumDuration = moment.duration(maximumTime).asSeconds();
