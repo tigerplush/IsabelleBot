@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const moment = require('moment');
 const {apiUrl} = require('./config.json');
 
 const {userDatabase} = require('./Database/databases.js');
@@ -27,7 +28,7 @@ module.exports =
             channels.map(channel =>
                 {
                     let villagers = json.villager;
-                    let announcement = "No villagers have a birthday today";
+                    let announcement = "Hmmm... There really isn't any news to speak of today...";
                     if(villagers && villagers.length > 0)
                     {
                         if(villagers.length == 1)
@@ -75,7 +76,16 @@ module.exports =
                         {
                             console.log(err);
                         })
-                    .finally(() => channel.send(announcement));
+                    .finally(() =>
+                    {
+                        const guildName = channel.guild.name;
+                        const time = moment().format("h:mm A [(GMT)] [on] dddd, MMMM Do, YYYY");
+                        let messageContent = `Good day, everyone!`;
+                        messageContent += `\nRight now on **${guildName}** it's ${time}.`;
+                        messageContent += `\n${announcement}`;
+                        messageContent += `\nThat's all for today... Have a fun day out there!`;
+                        channel.send(messageContent)
+                    });
                 });
         })
         .catch(err => console.log(err));
