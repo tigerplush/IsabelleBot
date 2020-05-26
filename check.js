@@ -70,13 +70,12 @@ module.exports =
                                 }
                                 announcement += "! :tada:"
                             }
-                            channel.send(announcement);
                         })
                     .catch(err =>
                         {
-                            channel.send(announcement);
                             console.log(err);
-                        });
+                        })
+                    .finally(() => channel.send(announcement));
                 });
         })
         .catch(err => console.log(err));
