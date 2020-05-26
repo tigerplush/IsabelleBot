@@ -77,32 +77,32 @@ module.exports =
                     throw new Error(`No options have been defined, poll is useless`);
                 }
 
-                let messagePromises = [];
-                for (let num = 0; num < options; num++)
-                {
-                    let messageContent = `Please react to this message with an emoji for option ${num + 1}`;
-                    messagePromises.push(message.channel.send(messageContent));
-                }
+                let p = Promise.resolve();
 
-                return Promise.all(messagePromises);
-            })
-        .then(messages =>
-            {
-                const reactionPromises = messages.map(pollMessage =>
-                    {
-                        const filter = (reaction, user) => user.id === userId;
-                        return pollMessage.awaitReactions(filter, {max: 1, time: 3*60*1000, errors: ['time']});
-                    })
-                return Promise.all(reactionPromises);
-            })
-        .then(messageReactions =>
-            {
-                for(reaction of messageReactions)
+                for (let i = 0; i < options; i++)
                 {
-                    emojis.push(reaction.first().emoji);
-                    reaction.first().message.delete()
+                    p = p.then(()=>
+                        {
+                            let messageContent = `Please react to this message with an emoji for option ${i + 1}`;
+                            return message.channel.send(messageContent);
+                        })
+                    .then(message =>
+                        {
+                            const filter = (reaction, user) => user.id === userId;
+                            return message.awaitReactions(filter, {max: 1, time: 3*60*1000, errors: ['time']});
+                        })
+                    .then(messageReaction =>
+                        {
+                            emojis.push(messageReaction.first().emoji);
+                            return messageReaction.first().message.delete();
+                        })
                     .catch(err => console.error(err));
                 }
+
+                return p;
+            })
+        .then(() =>
+            {
                 let messageContent = `<@!${userId}> has created a poll:\n`;
                 messageContent += pollContent;
                 for(let i = 0; i < options; i++)
@@ -114,12 +114,19 @@ module.exports =
             })
         .then(message =>
             {
+                let p = Promise.resolve();
                 for(let i = 0; i < options; i++)
                 {
-                    message.react(emojis[i])
-                    .catch(err => console.error(err));
+                    p = p.then(() =>
+                    {
+                        return message.react(emojis[i]);
+                    });
                 }
 
+                return p;
+            })
+        .then(() =>
+            {
                 const reducedEmojis = emojis.map(emoji =>
                     {
                         return {name: emoji.name, id: emoji.id};
