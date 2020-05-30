@@ -1,6 +1,6 @@
 {
   "name": "isabellebot",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "This is a bot connecting to a homebrew version of the villagerdb api and posting villagers birthdays",
   "main": "isabelle.js",
   "dependencies": {
