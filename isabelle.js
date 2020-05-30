@@ -49,12 +49,6 @@ cron.schedule('45 10 * * *', () =>
 
 bot.on('ready', () =>
 {
-    channelDatabase.fetchAnnouncementChannels(bot.channels)
-    .then(channels =>
-        {
-            check.execute(channels);
-        })
-    .catch(err => console.log(err));
 });
 
 bot.on('guildMemberUpdate', (oldMember, newMember)=>
