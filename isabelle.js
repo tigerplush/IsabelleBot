@@ -80,7 +80,6 @@ bot.on('guildMemberUpdate', (oldMember, newMember)=>
                             const timeoutDuration = moment.duration(welcomingTimeout);
                             const timeout = moment().subtract(timeoutDuration);
                             const lastMessage = moment(parseInt(channelInfo.lastMessageTimestamp));
-                            console.log(timeout.diff(lastMessage));
                             return timeout.diff(lastMessage) < 0;
                         })
                     .catch(err =>
@@ -90,7 +89,6 @@ bot.on('guildMemberUpdate', (oldMember, newMember)=>
                         })
                     .then(timeout =>
                         {
-                            console.log(timeout);
                             if(!timeout)
                             {
                                 //find the welcome message in the database and send it to the welcoming channel
