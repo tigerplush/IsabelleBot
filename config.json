@@ -3,7 +3,8 @@
     "pathToDatabase": "databases",
     "welcomeRoles":
     [
-        "Thug"
+        "708014925007683674",
+        "702249699335340155"
     ],
     "channelDb": "channels.db",
     "welcomeMessageDb": "welcomeMessage.db",

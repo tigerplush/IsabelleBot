@@ -57,55 +57,57 @@ bot.on('guildMemberUpdate', (oldMember, newMember)=>
     welcomeRoles.map(welcomeRole =>
         {
             //check if updates user already had that role
-            const oldRole = oldMember.roles.cache.find(role => role.name === welcomeRole);
-            if(!oldRole)
+            const oldRoleCache = oldMember.roles.cache;
+            if(!oldRoleCache.has(welcomeRole))
             {
-                //if not, check if he has it now
-                const newRole = newMember.roles.cache.find(role => role.name === welcomeRole);
-                if(newRole)
+                const newRoleCache = newMember.roles.cache;
+                if(newRoleCache.has(welcomeRole))
                 {
+                    const newRole = newRoleCache.get(welcomeRole);
                     const serverid = newMember.guild.id;
                     const userid = newMember.id;
-                    console.log(`${welcomeRole}ified new member ${userid}`);
-
+                    console.log(`${newRole.name}ified new member ${userid}`);
+                    let welcomeChannel = {};
                     // look for welcoming channel
                     channelDatabase.fetchChannel(bot.channels, {serverid: serverid, type: "welcome"})
                     .then(channel =>
                         {
-                            channelDatabase.findChannel(serverid, "welcome")
-                            .then(channelInfo =>
-                                {
-                                    const timeoutDuration = moment.duration(welcomingTimeout);
-                                    const timeout = moment().subtract(timeoutDuration);
-
-                                    return timeout.diff(channelInfo.lastMessageTimestamp) < 0;
-                                })
-                            .catch(err =>
-                                {
-                                    console.log(err);
-                                    return;
-                                })
-                            .then(timeout =>
-                                {
-                                    if(!timeout)
-                                    {
-                                        //find the welcome message in the database and send it to the welcoming channel
-                                        welcomeMessageDatabase.findMessage(serverid)
-                                        .then(messageContent => channel.send(messageContent))
-                                        .catch(err => console.log(err));
-                                        channelDatabase.updateTimestamp(serverid);
-                                    }
-                                    else
-                                    {
-                                        console.log("welcoming is still on cooldown");
-                                    }
-                                });
+                            welcomeChannel = channel;
+                            return channelDatabase.findChannel(serverid, "welcome");
+                        })
+                    .then(channelInfo =>
+                        {
+                            const timeoutDuration = moment.duration(welcomingTimeout);
+                            const timeout = moment().subtract(timeoutDuration);
+                            const lastMessage = moment(parseInt(channelInfo.lastMessageTimestamp));
+                            console.log(timeout.diff(lastMessage));
+                            return timeout.diff(lastMessage) < 0;
+                        })
+                    .catch(err =>
+                        {
+                            console.log(err);
+                            return false;
+                        })
+                    .then(timeout =>
+                        {
+                            console.log(timeout);
+                            if(!timeout)
+                            {
+                                //find the welcome message in the database and send it to the welcoming channel
+                                welcomeMessageDatabase.findMessage(serverid)
+                                .then(messageContent => welcomeChannel.send(messageContent))
+                                .catch(err => console.log(err));
+                                channelDatabase.updateTimestamp(serverid);
+                            }
+                            else
+                            {
+                                console.log("welcoming is still on cooldown");
+                            }
                         })
                     .catch(err => console.log(err));
                 }
             }
-        })
-    
+        });
 });
 
 bot.on('message', message => {
