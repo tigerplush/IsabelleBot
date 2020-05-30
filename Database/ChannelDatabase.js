@@ -100,7 +100,7 @@ class ChannelDatabase extends Database
     updateTimestamp(serverid)
     {
         super.update(
-            {serverid: serverid},
+            {serverid: serverid, type: "welcome"},
             {lastMessageTimestamp: Date.now()})
             .catch(err => console.log(err));
     }
