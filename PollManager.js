@@ -1,3 +1,4 @@
+const Discord = require('discord.js');
 const moment = require('moment');
 
 const {pollDatabase} = require('./Database/databases');
@@ -36,7 +37,16 @@ PollManager.prototype.update = function(poll)
             messageContent = messageContent.replace(/\n.*$/, `\nPoll ends ${endingTime.fromNow()}`);
             return message.edit(messageContent);
         })
-    .catch(err => console.log(err));
+    .catch(err =>
+        {
+            console.error(err);
+            
+            //if this message couldn't be retrieved, delete form database
+            if(err.code === Discord.Constants.APIErrors.UNKNOWN_MESSAGE)
+            {
+                pollDatabase.remove({_id: poll._id});
+            }
+        });
 }
 
 PollManager.prototype.remove = function(poll)
