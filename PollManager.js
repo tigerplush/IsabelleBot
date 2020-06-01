@@ -103,7 +103,7 @@ PollManager.prototype.fetchMessage = function(channelId, messageId)
     .then(channel =>
         {
             return channel.messages.fetch(messageId);
-        })
+        });
 }
 
 module.exports = PollManager;
