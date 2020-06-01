@@ -59,6 +59,10 @@ PollManager.prototype.remove = function(poll)
             messageContent = messageContent.replace(/\n.*$/, endingString);
             return message.edit(messageContent);
         })
+    .then(pollMessage =>
+        {
+            return pollMessage.unpin();
+        })
     .then(() =>
         {
             return pollDatabase.remove({_id: poll._id});
