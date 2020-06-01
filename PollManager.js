@@ -8,6 +8,9 @@ function PollManager(channelManager)
     this.channelManager = channelManager;
 }
 
+/**
+ * Checks all open polls if they should be updated or closed
+ */
 PollManager.prototype.check = function()
 {
     pollDatabase.find({})
@@ -27,6 +30,10 @@ PollManager.prototype.check = function()
     .catch(err => console.log(err));
 }
 
+/**
+ * Updates a poll
+ * @param poll poll to update
+ */
 PollManager.prototype.update = function(poll)
 {
     this.fetchMessage(poll.channelId, poll.messageId)
@@ -49,6 +56,10 @@ PollManager.prototype.update = function(poll)
         });
 }
 
+/**
+ * Closes a poll
+ * @param poll poll to close
+ */
 PollManager.prototype.remove = function(poll)
 {
     this.fetchMessage(poll.channelId, poll.messageId)
@@ -70,11 +81,22 @@ PollManager.prototype.remove = function(poll)
     .catch(err => console.log(err));
 }
 
+/** 
+ * Fetches a channel
+ * @param {String} channelId snowflake of channel to fetch
+ * @returns {Promise}
+ */
 PollManager.prototype.fetchChannel = function(channelId)
 {
     return this.channelManager.fetch(channelId);
 }
 
+/** 
+ * Fetches a message from a channel
+ * @param {String} channelId snowflake of channel to fetch
+ * @param {String} messageId snowflake of message to fetch
+ * @returns {Promise}
+ */
 PollManager.prototype.fetchMessage = function(channelId, messageId)
 {
     return this.fetchChannel(channelId)
