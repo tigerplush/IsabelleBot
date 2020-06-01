@@ -66,13 +66,22 @@ PollManager.prototype.remove = function(poll)
     .then(message =>
         {
             let messageContent = message.content;
-            let endingString = `\nPoll has ended`;
+            let endingString = `\nPoll has ended, the results are:\n`;
+
+            endingString += this.fetchPollResults(poll, message.reactions.cache).join(', ');
+
             messageContent = messageContent.replace(/\n.*$/, endingString);
             return message.edit(messageContent);
         })
     .then(pollMessage =>
         {
             return pollMessage.unpin();
+        })
+    .then(pollMessage =>
+        {
+            let endMessage = `<@!${poll.userId}>s poll has ended, the results are:\n`
+            endMessage += this.fetchPollResults(poll, pollMessage.reactions.cache).join(', ');
+            return pollMessage.channel.send(endMessage);
         })
     .then(() =>
         {
@@ -104,6 +113,23 @@ PollManager.prototype.fetchMessage = function(channelId, messageId)
         {
             return channel.messages.fetch(messageId);
         });
+}
+
+/**
+ * Fetches poll results from a cache
+ * @param poll
+ * @param reactionCache
+ * @returns {String[]}
+ */
+PollManager.prototype.fetchPollResults = function(poll, reactionCache)
+{
+    let results = [];
+    for (const emoji of poll.emojis)
+    {
+        const react = reactionCache.find(reaction => reaction.emoji.name === emoji.name && reaction.emoji.id === emoji.id);
+        results.push(`${react.count - 1} voted for ${react.emoji}`);
+    }
+    return results;
 }
 
 module.exports = PollManager;
