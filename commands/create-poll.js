@@ -115,6 +115,10 @@ module.exports =
             })
         .then(pollMessage =>
             {
+                return pollMessage.pin();
+            })
+        .then(pollMessage =>
+            {
                 messageId = pollMessage.id;
                 let p = Promise.resolve();
                 for(let i = 0; i < options; i++)
