@@ -56,17 +56,19 @@ bot.on('guildMemberUpdate', (oldMember, newMember)=>
     //for every role
     welcomeRoles.map(welcomeRole =>
         {
+            console.log(`Checking for welcome role ${welcomeRole}`);
             //check if updates user already had that role
             const oldRoleCache = oldMember.roles.cache;
             if(!oldRoleCache.has(welcomeRole))
             {
+                console.log(`Old member doesn't have ${welcomeRole}`);
                 const newRoleCache = newMember.roles.cache;
                 if(newRoleCache.has(welcomeRole))
                 {
                     const newRole = newRoleCache.get(welcomeRole);
                     const serverid = newMember.guild.id;
                     const userid = newMember.id;
-                    console.log(`${newRole.name}ified new member ${userid}`);
+                    console.log(`Updated member has ${welcomeRole}, ${newRole.name}ified new member ${userid}`);
                     let welcomeChannel = {};
                     // look for welcoming channel
                     channelDatabase.fetchChannel(bot.channels, {serverid: serverid, type: "welcome"})
