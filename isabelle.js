@@ -5,6 +5,7 @@ const {prefix, welcomeRoles, welcomingTimeout, minimumTime, maximumTime} = requi
 const cron = require('node-cron');
 const check = require('./check.js');
 const moment = require('moment');
+require('console-stamp')(console, 'HH:MM:ss.l');
 
 const PollManager = require('./PollManager');
 
