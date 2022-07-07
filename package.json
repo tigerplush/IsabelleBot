@@ -6,7 +6,7 @@
   "dependencies": {
     "console-stamp": "^3.0.1",
     "discord.js": "^12.2.0",
-    "moment": "^2.25.3",
+    "moment": "^2.29.4",
     "nedb": "^1.8.0",
     "node-cron": "^2.0.3",
     "node-fetch": "^2.6.0",
